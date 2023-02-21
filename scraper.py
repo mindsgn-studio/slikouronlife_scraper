@@ -4,6 +4,8 @@ import requests
 from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 import pymongo
+import time
+import sys
 
 client = pymongo.MongoClient(os.getenv('MONGO'))
 db = client['music-dev']
@@ -24,6 +26,8 @@ def get_page(page_number):
             if(profile_info[0].select("h2")):
                 name = profile_info[0].select("h2")[0].text
         finally:   
+            print('sleeping')
+            time.sleep(5)
             page_number = page_number+1
             get_page(page_number)
         if(profile_info[0].select_one("img")):
@@ -49,6 +53,8 @@ def get_page(page_number):
                         results = save_music(id, item.select_one('a').attrs['data-artist'], item.select_one('a').attrs['data-title'], item.select_one('a').attrs['data-source'],  item.select_one('a').attrs['data-song-image'])
 
     page_number = page_number+1
+    print('sleeping')
+    time.sleep(5)
     get_page(page_number)
 
 def save_details(name, profile, social, contact):
@@ -79,4 +85,5 @@ def save_music(id ,name, title, link, cover_art):
 
 if __name__ == "__main__":
     page_number = 0
+    page_number=int(sys.argv[1])
     get_page(page_number)
