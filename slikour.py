@@ -1,14 +1,16 @@
 
 import os
 import requests
-from bs4 import BeautifulSoup
 from dotenv import load_dotenv
+from bs4 import BeautifulSoup
 import pymongo
 import time
 import sys
 
+load_dotenv()
+
 client = pymongo.MongoClient(os.getenv('MONGO'))
-db = client['music-dev']
+db = client['mixo-dev']
 
 def get_page(page_number):
     name = ""
@@ -25,18 +27,23 @@ def get_page(page_number):
         try:
             if(profile_info[0].select("h2")):
                 name = profile_info[0].select("h2")[0].text
-        finally:   
-            print('sleeping')
-            time.sleep(5)
+        except UnboundLocalError:
             page_number = page_number+1
+            print('failed page', page_number)
+            time.sleep(5)
             get_page(page_number)
+            
+
         if(profile_info[0].select_one("img")):
             profile = profile_info[0].select_one("img").attrs['src']
+        
         if(profile_info[0].select_one('.social-container')):
             socials = profile_info[0].select_one('.social-container')
+            
             if(socials.select("a")):
                 for item in socials.select("a"):
                     social.append(item.attrs['href'])
+        
         if(profile_info[0].select_one('.profile-contact')):
             contact_details = profile_info[0].select('.profile-contact')
             if(contact_details[0].select('b')):
@@ -58,7 +65,7 @@ def get_page(page_number):
     get_page(page_number)
 
 def save_details(name, profile, social, contact):
-    artist_collection = db['artist']
+    artist_collection = db['artists']
     results = artist_collection.find_one({'name': name, "contact": contact})
     if(results):
         return results['_id']
@@ -71,12 +78,12 @@ def save_details(name, profile, social, contact):
             return False
 
 def save_music(id ,name, title, link, cover_art):
-    song_collection = db['song']
+    song_collection = db['tracks']
     results = song_collection.find_one({'artistId': id, "name": name, 'title': title, "link": link,  "art": cover_art})
     if(results):
         pass
     else:
-        response = song_collection.insert_one({'artistId': id, "name": name, 'title': title, "link": link,  "art": cover_art})
+        response = song_collection.insert_one({'artistId': id, "name": name, 'title': title, "link": link,  "art": cover_art, "source": { "link": "slikouronlife.co.za", "name": "slikouronlife.co.za" } })
         if(response):
             print("saved track", response.inserted_id)
             return response.inserted_id
