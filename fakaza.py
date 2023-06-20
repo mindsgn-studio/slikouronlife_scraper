@@ -97,5 +97,4 @@ def save_music(name, title, link, cover_art, article_link):
 
 if __name__ == "__main__":
     page_number = 0
-    page_number=int(sys.argv[1])
     get_page(page_number)
