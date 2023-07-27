@@ -83,14 +83,50 @@ def test_url(url):
     pass
 
 def save_music(name, title, link, cover_art, article_link):
-    song_collection = db['tracks']
-    results = song_collection.find_one({"name": name, 'title': title})
+    song_collection = db['songs']
+    results = song_collection.find_one({"artist": [name], 'title': title})
     if(results):
+        print("skipping entry")
         pass
     else:
-        response = song_collection.insert_one({'artistId': None, "name": name, 'title': title, "link": link,  "art": cover_art, "source": { "website": "https://fakaza.me", "link": article_link, "name": "fakaza" } })
+        response = song_collection.insert_one(
+            {
+                'artistId': None,
+                "artist": [name],
+                'title': title,
+                "album": None,
+                "albumArtist": [name],
+                "composer": None,
+                "genre": None,
+                "duration": 0,
+                "link": link,
+                "lyrics": None,
+                "artwork": cover_art,
+                "year": None,
+                "size": None,
+                "track": {
+                    "number": 1,
+                    "total": 1,
+                },
+                "diskNumber": {
+                    "number": 1,
+                    "total": 1,
+                },
+                "compilation": False,
+                "bpm": None,
+                "bitRate": None,
+                "sampleRate": None,
+                "channels": None,
+                "comments": None,
+                "scraped": True,
+                "nft": False,
+                "source": {
+                    "website": "https://fakaza.me", 
+                    "link": article_link, 
+                    "name": "fakaza"
+                } })
         if(response):
-            print("saved track", response.inserted_id)
+            print("saved song", response.inserted_id)
             return response.inserted_id
         else:
             return False
@@ -98,4 +134,3 @@ def save_music(name, title, link, cover_art, article_link):
 if __name__ == "__main__":
     page_number = 0
     get_page(page_number)
-    
