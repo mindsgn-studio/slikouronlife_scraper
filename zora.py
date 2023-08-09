@@ -22,8 +22,7 @@ async def process_token(token, collection_address):
             artist = metadata['artist_name']
             art = metadata['image']
             link = metadata['audio_url']
-            print(token)
-            # await save_music(artist, title, link, art, collection_address)
+            await save_music(artist, title, link, art, collection_address)
         except KeyError as e:
             print(f"Error accessing metadata: {e}")
 
@@ -82,7 +81,7 @@ async def graphQLQuery(queue):
         print(f"GraphQL query error: {e}")
         await graphQLQuery(queue)
 
-async def save_music(name, title, link, cover_art, collection_address, nft ):
+async def save_music(name, title, link, cover_art, collection_address):
     song_collection = db['songs']
     results = song_collection.find_one({"artist": [name], 'title': title})
     if(results):
@@ -118,7 +117,7 @@ async def save_music(name, title, link, cover_art, collection_address, nft ):
                 "channels": None,
                 "comments": None,
                 "scraped": True,
-                "nft": nft,
+                "nft": True,
                 "source": {
                     "website": "https://market.zora.co/", 
                     "link": "https://market.zora.co/"+collection_address, 
