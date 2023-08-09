@@ -73,22 +73,23 @@ def save_details(name, profile, social, contact):
         response = artist_collection.insert_one({"name": name, "profile": profile, "social": social, "contact": contact})
         if(response):
             print("saved artist", response.inserted_id)
-            return response.inserted_id
+            return False
         else:
             return False
 
 def save_music(id ,name, title, link, cover_art):
-    song_collection = db['tracks']
+    song_collection = db['songs']
     results = song_collection.find_one({'artistId': id, "name": name, 'title': title, "link": link,  "art": cover_art})
     if(results):
         pass
     else:
-        response = song_collection.insert_one({'artistId': id, "name": name, 'title': title, "link": link,  "art": cover_art, "source": { "link": "slikouronlife.co.za", "name": "slikouronlife.co.za" } })
-        if(response):
-            print("saved track", response.inserted_id)
-            return response.inserted_id
-        else:
-            return False
+        print(name, title, link, cover_art)
+        # response = song_collection.insert_one({'artistId': id, "name": name, 'title': title, "link": link,  "art": cover_art, "source": { "link": "slikouronlife.co.za", "name": "slikouronlife.co.za" } })
+        #if(response):
+        #    print("saved track", response.inserted_id)
+        #    return response.inserted_id
+        #else:
+        #    return False
 
 if __name__ == "__main__":
     page_number = 0
