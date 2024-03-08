@@ -12,8 +12,8 @@ load_dotenv()
 client = pymongo.MongoClient(os.getenv('MONGO'))
 db = client['mixo']
 
-def get_page(page_number):
 
+def get_page(page_number):
     response = requests.get('https://slikouronlife.co.za/artist/'+str(page_number))
     content = BeautifulSoup(response.content, 'html.parser')
     try:
@@ -30,7 +30,7 @@ def get_page(page_number):
     except Exception as e:
         print(f"Error processing page {page_number}: {e}")
         get_page(page_number+1)
-    get_page(page_number+1) 
+    get_page(page_number+1)
 
 
 def save_music(artist_id, artist, title, cover_art, song_id):
@@ -69,5 +69,5 @@ def save_music(artist_id, artist, title, cover_art, song_id):
 
 
 if __name__ == "__main__":
-    page_number = 150144
+    page_number = 0
     get_page(page_number)
