@@ -10,7 +10,8 @@ import sys
 load_dotenv()
 
 client = pymongo.MongoClient(os.getenv('MONGO'))
-db = client[os.getenv('ENVIRONMENT')]
+db = client["mixo"]
+
 
 def get_page(page_number):
     page_url = f'https://fakaza.me/category/download-mp3/page/{page_number}'
@@ -44,6 +45,7 @@ def get_page(page_number):
     page_number += 1
     get_page(page_number)
 
+
 def get_artist_name(article_section):
     artist_and_title = article_section.select_one('.entry-title').text
     delimiter = " – "
@@ -53,7 +55,8 @@ def get_artist_name(article_section):
         return artist_and_title[:start_index]
 
     return None
-    
+
+
 def get_title(article_section):
     artist_and_title = article_section.select_one('.entry-title').text
     delimiter = " – "
@@ -64,6 +67,7 @@ def get_title(article_section):
 
     return None
 
+
 def get_cover_art(main_content):
     try:
         artwork_container = main_content.select_one(".entry-thumbnail")
@@ -71,7 +75,8 @@ def get_cover_art(main_content):
         return art
     except AttributeError:
         return None
-    
+
+
 def get_link(main_content):
     try:
         for link in main_content.find_all("a"):
@@ -81,6 +86,7 @@ def get_link(main_content):
     except Exception:
         pass
     return None
+
 
 def save_music(name, title, link, cover_art, article_link):
     song_collection = db['songs']
@@ -134,6 +140,7 @@ def save_music(name, title, link, cover_art, article_link):
     else:
         print("Failed to save song:", name, "-", title, flush=True)
         return None
+
 
 if __name__ == "__main__":
     page_number = 0
