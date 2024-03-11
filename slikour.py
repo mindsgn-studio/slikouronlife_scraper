@@ -67,7 +67,6 @@ def save_music(artist_id, artist, title, cover_art, song_id):
         else:
             return False
 
-
 if __name__ == "__main__":
     page_number = 0
     get_page(page_number)
