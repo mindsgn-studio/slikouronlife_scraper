@@ -24,11 +24,10 @@ def get_page(page_number):
                 pass
             else:
                 go_to_artist_page(artist_page)
-        # print(artists)
     except Exception as e:
         print(f"Error processing page {page_number}: {e}")
-        get_page(page_number+1)
-    # get_page(page_number+1)
+        get_page(page_number+60)
+    get_page(page_number+60)
 
 
 def go_to_artist_page(artist_page):
@@ -82,7 +81,7 @@ def save_album(artist, album_title, cover_art, album_link):
         "artist": artist,
         "title": album_title,
         "link": album_link,
-        "cover_art": cover_art
+        "coverArt": cover_art
     })
 
     if (results):
@@ -91,12 +90,12 @@ def save_album(artist, album_title, cover_art, album_link):
         response = song_collection.insert_one({
             "artist": artist,
             "title": album_title,
-            "album_link": album_link,
-            "cover_art": cover_art
+            "link": album_link,
+            "coverArt": cover_art
         })
 
         if (response):
-            print("saved album")
+            print("saved album", artist, album_title)
             print("\n")
         else:
             pass
