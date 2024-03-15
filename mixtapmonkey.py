@@ -42,7 +42,6 @@ def go_to_artist_page(artist_page):
         pass
     
 
-
 def go_to_mixtape_page(mixtape_page):
     try:
         response = requests.get("https://mixtapemonkey.com"+mixtape_page)
